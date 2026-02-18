@@ -1,5 +1,6 @@
 package com.example.zeraki.controller;
 
+import com.example.zeraki.dto.ApiResponse;
 import com.example.zeraki.dto.CustomerRequest;
 import com.example.zeraki.model.Customer;
 import com.example.zeraki.service.CustomerService;
@@ -19,28 +20,43 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<Customer> create(@Valid @RequestBody CustomerRequest request) {
-        return new ResponseEntity<>(customerService.createCustomer(request), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<Customer>> create(@Valid @RequestBody CustomerRequest request) {
+        Customer data = customerService.createCustomer(request);
+        return new ResponseEntity<>(
+                new ApiResponse<>(201, "Customer created successfully", data),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping
-    public List<Customer> getAll() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<ApiResponse<List<Customer>>> getAll() {
+        List<Customer> data = customerService.getAllCustomers();
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Customers retrieved successfully", data)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+    public ResponseEntity<ApiResponse<Customer>> getById(@PathVariable Long id) {
+        Customer data = customerService.getCustomerById(id);
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Customer found", data)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> update(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
-        return ResponseEntity.ok(customerService.updateCustomer(id, request));
+    public ResponseEntity<ApiResponse<Customer>> update(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
+        Customer data = customerService.updateCustomer(id, request);
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Customer updated successfully", data)
+        );
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         customerService.deleteCustomer(id);
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Customer deleted successfully", null)
+        );
     }
 }
