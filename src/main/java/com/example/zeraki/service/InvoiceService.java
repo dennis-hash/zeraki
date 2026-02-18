@@ -72,8 +72,6 @@ public class InvoiceService {
         invoiceRepository.delete(invoice);
     }
 
-    // In InvoiceService.java
-
     public List<OverdueInvoiceResponse> getOverdueInvoices(Long customerId, LocalDateTime start, LocalDateTime end) {
         return invoiceRepository.findOverdueInvoicesCalculated(
                 LocalDateTime.now(),
