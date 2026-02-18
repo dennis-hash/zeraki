@@ -1,5 +1,6 @@
 package com.example.zeraki.service;
 
+import com.example.zeraki.Exceptions.BusinessRuleViolationException;
 import com.example.zeraki.Exceptions.NotFoundException;
 import com.example.zeraki.dto.InvoiceRequest;
 import com.example.zeraki.dto.OverdueInvoiceResponse;
@@ -24,7 +25,7 @@ public class InvoiceService {
 
     public Invoice createInvoice(InvoiceRequest request) {
         Customer customer = customerRepository.findById(request.customerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid customer ID"));
+                .orElseThrow(() -> new BusinessRuleViolationException("Invalid customer ID"));
 
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
@@ -66,7 +67,7 @@ public class InvoiceService {
         Invoice invoice = getInvoiceById(id);
 
         if (invoice.getPaid() > 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete invoice with existing payments");
+            throw new BusinessRuleViolationException("Cannot delete invoice with existing payments");
         }
 
         invoiceRepository.delete(invoice);
