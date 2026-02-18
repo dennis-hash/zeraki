@@ -19,7 +19,7 @@ public class Payment {
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
-    @Column(nullable = false, precision = 19, scale = 2)
+    @Column(nullable = false)
     private Double amount;
 
     @Enumerated(EnumType.STRING)

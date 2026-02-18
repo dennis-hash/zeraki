@@ -23,8 +23,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "ORDER BY SUM(p.amount) DESC")
     List<TopCustomerResponse> findTopCustomers(LocalDateTime start, LocalDateTime end, org.springframework.data.domain.Pageable pageable);
 
-    @Query("SELECT new com.example.zeraki.dto.MonthlyRevenueResponse(FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m'), SUM(p.amount)) " +
-            "FROM Payment p WHERE p.createdAt BETWEEN :start AND :end " +
+    @Query("SELECT new com.example.zeraki.dto.MonthlyRevenueResponse(" +
+            "CAST(FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m') AS String), " +
+            "SUM(p.amount)) " +
+            "FROM Payment p " +
+            "WHERE p.createdAt BETWEEN :start AND :end " +
             "GROUP BY FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m')")
     List<MonthlyRevenueResponse> findMonthlyRevenue(LocalDateTime start, LocalDateTime end);
 

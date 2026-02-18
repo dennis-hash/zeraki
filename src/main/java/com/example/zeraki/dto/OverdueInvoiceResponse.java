@@ -6,10 +6,10 @@ public record OverdueInvoiceResponse(
         Long invoiceId,
         String customerName,
         Double amount,
-        Double amountPaid,
+        Double paid,
         Double balance,
         LocalDate dueDate,
-        long daysOverdue,
+        Integer daysOverdue,
         String status
 ) {
 }

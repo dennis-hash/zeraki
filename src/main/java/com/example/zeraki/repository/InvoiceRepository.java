@@ -16,16 +16,14 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT SUM(i.amount) FROM Invoice i WHERE i.createdAt BETWEEN :start AND :end")
     Double sumInvoicedAmountBetween(LocalDateTime start, LocalDateTime end);
 
-    // In InvoiceRepository.java
-
     @Query("SELECT new com.example.zeraki.dto.OverdueInvoiceResponse(" +
             "i.id, " +
             "i.customer.name, " +
             "i.amount, " +
             "i.paid, " +
             "(i.amount - i.paid), " +
-            "CAST(i.dueDate AS localdate), " +
-            "FUNCTION('DATEDIFF', :now, i.dueDate), " +
+            "CAST(i.dueDate AS LocalDate), " +
+            "CAST(FUNCTION('DATEDIFF', :now, i.dueDate) AS Integer), " + // Explicit cast to match Record
             "'OVERDUE') " +
             "FROM Invoice i " +
             "WHERE i.status != 'PAID' AND i.dueDate < :now " +
